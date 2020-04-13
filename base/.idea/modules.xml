@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/base.iml" filepath="$PROJECT_DIR$/base.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/coursetorrent-app/base.coursetorrent-app.iml" filepath="$PROJECT_DIR$/.idea/modules/coursetorrent-app/base.coursetorrent-app.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/coursetorrent-app/base.coursetorrent-app.main.iml" filepath="$PROJECT_DIR$/.idea/modules/coursetorrent-app/base.coursetorrent-app.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/coursetorrent-app/base.coursetorrent-app.test.iml" filepath="$PROJECT_DIR$/.idea/modules/coursetorrent-app/base.coursetorrent-app.test.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/coursetorrent-test/base.coursetorrent-test.iml" filepath="$PROJECT_DIR$/.idea/modules/coursetorrent-test/base.coursetorrent-test.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/coursetorrent-test/base.coursetorrent-test.main.iml" filepath="$PROJECT_DIR$/.idea/modules/coursetorrent-test/base.coursetorrent-test.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/coursetorrent-test/base.coursetorrent-test.test.iml" filepath="$PROJECT_DIR$/.idea/modules/coursetorrent-test/base.coursetorrent-test.test.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/library/base.library.iml" filepath="$PROJECT_DIR$/.idea/modules/library/base.library.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/library/base.library.main.iml" filepath="$PROJECT_DIR$/.idea/modules/library/base.library.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/library/base.library.test.iml" filepath="$PROJECT_DIR$/.idea/modules/library/base.library.test.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/base.main.iml" filepath="$PROJECT_DIR$/.idea/modules/base.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/base.test.iml" filepath="$PROJECT_DIR$/.idea/modules/base.test.iml" />
+    </modules>
+  </component>
+</project>
