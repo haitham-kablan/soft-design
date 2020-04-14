@@ -1,6 +1,13 @@
 package il.ac.technion.cs.softwaredesign
 
 
+
+
+
+
+
+
+
 /**
  * This is the class implementing CourseTorrent, a BitTorrent client.
  *
@@ -8,6 +15,14 @@ package il.ac.technion.cs.softwaredesign
  * + Parsing torrent metainfo files (".torrent" files)
  */
 class CourseTorrent {
+
+
+
+
+
+
+
+
     /**
      * Load in the torrent metainfo file from [torrent]. The specification for these files can be found here:
      * [Metainfo File Structure](https://wiki.theory.org/index.php/BitTorrentSpecification#Metainfo_File_Structure).

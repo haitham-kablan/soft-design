@@ -14,7 +14,14 @@ class CourseTorrentStaffTest {
 
     @Test
     fun `after load, infohash calculated correctly`() {
+
+
+        println(debian)
+
+
         val infohash = torrent.load(debian)
+        println("\n\n" + infohash)
+
 
         assertThat(infohash, equalTo("5a8062c076fa85e8056451c0d9aa04349ae27909"))
     }
