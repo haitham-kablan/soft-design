@@ -1,22 +1,28 @@
 
 import java.util.*
 
+//TODO add this
+//      * @throws IllegalArgumentException If [str] is not a valid metainfo file.
+class Parser public constructor( str : String) {
 
-class Parser public constructor(var id : Int) {
+    private val torrentFileText = str
+
+    private var id : Int = 0
+
+    public val metaInfoMap  = read() as LinkedHashMap< String , Any?>;//has keys: info
 
 
-
-    private val str = this::class.java.getResource("/debian-10.3.0-amd64-netinst.iso.torrent").readText()
-
+    //private val str = this::class.java.getResource("/debian-10.3.0-amd64-netinst.iso.torrent").readText()
 
 
+// TODO add this @throws IllegalArgumentException If [torrentFileText] is not a valid metainfo file.
     fun read(): Any? {
-        if (id >= str.length)
+        if (id >= torrentFileText.length)
             return null
 
 
 
-        val type: Char = str[id]
+        val type: Char = torrentFileText[id]
         ++id
 
         //integer i5e
@@ -26,7 +32,7 @@ class Parser public constructor(var id : Int) {
             val limit: Int = id + 22
             var neg = false
             while (id <= limit) {
-                val c: Char = str[id]
+                val c: Char = torrentFileText[id]
                 if (id === start && c == '-') {
                     neg = true
                     ++id
@@ -44,7 +50,7 @@ class Parser public constructor(var id : Int) {
         else if (type == 'l') {
             val out = ArrayList<Any?>()
             while (true) {
-                if (str[id] == 'e') return out
+                if (torrentFileText[id] == 'e') return out
                 out.add(read())
                 ++id
             }
@@ -54,9 +60,10 @@ class Parser public constructor(var id : Int) {
 
         // dictinary d key value key value e
         else if (type == 'd') {
+
             val out = LinkedHashMap<Any?, Any?>()
             while (true) {
-                if (str[id] == 'e') return out
+                if (torrentFileText[id] == 'e') return out
                 val key = read()
                 ++id
                 val value = read()
@@ -71,9 +78,9 @@ class Parser public constructor(var id : Int) {
             var len = type.toInt() - 48
             val limit: Int = id + 11
             while (id <= limit) {
-                val c: Char = str[id]
+                val c: Char = torrentFileText[id]
                 if (c == ':') {
-                    val out: String = str.substring(id + 1, id + len + 1)
+                    val out: String = torrentFileText.substring(id + 1, id + len + 1)
                     id += len
                     return out
                 }

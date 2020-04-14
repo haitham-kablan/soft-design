@@ -3,6 +3,7 @@ import il.ac.technion.cs.softwaredesign.storage.write
 
 class my_lib() {
 
+companion object{
 
     public fun lib_read(key: ByteArray ) :ByteArray?{
         return read(key);
@@ -13,5 +14,19 @@ class my_lib() {
 
         write(key,value);
     }
+
+
+
+    // @throws IllegalArgumentException If [infohash] is not loaded.
+    public fun lib_delete(key: ByteArray) : Unit {
+
+
+        //if(readVal == null || readVal.equals(0))
+
+        write(key, 0 as ByteArray)
+
+    }
+}
+
 
 }

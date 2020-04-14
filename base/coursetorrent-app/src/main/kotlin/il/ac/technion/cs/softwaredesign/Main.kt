@@ -9,9 +9,9 @@ fun main() {
 
    // val debian = getResource("/debian-10.3.0-amd64-netinst.iso.torrent").readText()
 
-    val parser = Parser(0)
+  //  val parser = Parser()
 
-    val infoKey = parser.read()
+//    val torrentMap = parser.read()
 
-    println(infoKey)
+    println(torrentMap)
 }

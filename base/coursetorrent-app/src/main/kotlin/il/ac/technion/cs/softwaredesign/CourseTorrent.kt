@@ -1,11 +1,10 @@
 package il.ac.technion.cs.softwaredesign
 
 
-
-
-
-
-
+import my_lib
+import Parser
+import java.util.ArrayList
+import java.util.LinkedHashMap
 
 
 /**
@@ -35,7 +34,33 @@ class CourseTorrent {
      * @throws IllegalStateException If the infohash of [torrent] is already loaded.
      * @return The infohash of the torrent, i.e., the SHA-1 of the `info` key of [torrent].
      */
-    fun load(torrent: String): String = TODO("Implement me!")
+    fun load(torrent: String): String {
+
+
+        val metainfomap = Parser(torrent).metaInfoMap
+
+        val infohash = metainfomap.get("info")
+        //TODO: convert infohash from info dictinary to infohash
+
+        val readVal = my_lib.lib_read(infohash as ByteArray)
+        if (readVal != null && !readVal.equals(0))//already exists and not deleted
+                throw IllegalStateException()
+
+        val announce = metainfomap.get("announce-list")
+
+        if(announce == null){
+            val list = ArrayList<String>()
+            list.add( metainfomap.get("announce") as String)
+            val list2 = ArrayList<ArrayList<String>>()
+            list2.add(list)
+            my_lib.lib_write(infohash, list2 as ByteArray)
+        }
+        else
+            my_lib.lib_write(infohash, announce as ByteArray)
+
+        return infohash as String
+
+    }
 
     /**
      * Remove the torrent identified by [infohash] from the system.
@@ -44,7 +69,17 @@ class CourseTorrent {
      *
      * @throws IllegalArgumentException If [infohash] is not loaded.
      */
-    fun unload(infohash: String): Unit = TODO("Implement me!")
+    fun unload(infohash: String): Unit {
+
+        val readVal = my_lib.lib_read(infohash as ByteArray);
+        if(readVal == null || readVal.equals(0))
+            throw IllegalArgumentException()
+
+        my_lib.lib_delete(infohash as ByteArray)
+    }
+
+
+
 
     /**
      * Return the announce URLs for the loaded torrent identified by [infohash].
@@ -59,5 +94,11 @@ class CourseTorrent {
      * @throws IllegalArgumentException If [infohash] is not loaded.
      * @return Tier lists of announce URLs.
      */
-    fun announces(infohash: String): List<List<String>> = TODO("Implement me!")
+    fun announces(infohash: String): List<List<String>> {
+
+        val readVal = my_lib.lib_read(infohash as ByteArray);
+        if(readVal == null || readVal.equals(0))
+            throw IllegalArgumentException()
+        return readVal as List<List<String>>
+    }
 }
