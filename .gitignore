@@ -28,3 +28,11 @@ base/coursetorrent-app/build/classes/kotlin/main/il/ac/technion/cs/softwaredesig
 base/library/build/kotlin/libraryjar-classes.txt
 
 *.jar
+
+base/coursetorrent-app/build/kotlin/coursetorrentappjar-classes.txt
+
+*.MF
+
+*.s
+
+*.values
