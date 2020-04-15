@@ -13,14 +13,8 @@ import java.util.LinkedHashMap
  * Currently specified:
  * + Parsing torrent metainfo files (".torrent" files)
  */
+
 class CourseTorrent {
-
-
-
-
-
-
-
 
     /**
      * Load in the torrent metainfo file from [torrent]. The specification for these files can be found here:
@@ -34,7 +28,7 @@ class CourseTorrent {
      * @throws IllegalStateException If the infohash of [torrent] is already loaded.
      * @return The infohash of the torrent, i.e., the SHA-1 of the `info` key of [torrent].
      */
-    fun load(torrent: String): String {
+    fun load(torrent: ByteArray): String {
 
 
         val metainfomap = Parser(torrent).metaInfoMap
@@ -44,7 +38,7 @@ class CourseTorrent {
 
         val readVal = my_lib.lib_read(infohash as ByteArray)
         if (readVal != null && !readVal.equals(0))//already exists and not deleted
-                throw IllegalStateException()
+            throw IllegalStateException()
 
         val announce = metainfomap.get("announce-list")
 

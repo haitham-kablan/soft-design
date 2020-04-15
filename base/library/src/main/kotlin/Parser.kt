@@ -1,39 +1,37 @@
 
+import java.nio.charset.Charset
 import java.util.*
 
 //TODO add this
 //      * @throws IllegalArgumentException If [str] is not a valid metainfo file.
-class Parser public constructor( str : String) {
 
+class Parser public constructor(str : ByteArray) {
+
+    private var pieces_flag: Boolean = false
     private val torrentFileText = str
-
     private var id : Int = 0
-
     public val metaInfoMap  = read() as LinkedHashMap< String , Any?>;//has keys: info
 
 
-    //private val str = this::class.java.getResource("/debian-10.3.0-amd64-netinst.iso.torrent").readText()
-
-
-// TODO add this @throws IllegalArgumentException If [torrentFileText] is not a valid metainfo file.
-    fun read(): Any? {
-        if (id >= torrentFileText.length)
+    // TODO add this @throws IllegalArgumentException If [torrentFileText] is not a valid metainfo file.
+    private fun read(): Any? {
+        if (id >= torrentFileText.size)
             return null
 
 
 
-        val type: Char = torrentFileText[id]
+        val type: Char = torrentFileText[id].toChar()
         ++id
 
-        //integer i5e
+        //integer example : i5e
         if (type == 'i') {
             var out: Long = 0
             val start: Int = id
             val limit: Int = id + 22
             var neg = false
             while (id <= limit) {
-                val c: Char = torrentFileText[id]
-                if (id === start && c == '-') {
+                val c: Char = torrentFileText[id].toChar()
+                if (id == start && c == '-') {
                     neg = true
                     ++id
                     continue
@@ -50,7 +48,7 @@ class Parser public constructor( str : String) {
         else if (type == 'l') {
             val out = ArrayList<Any?>()
             while (true) {
-                if (torrentFileText[id] == 'e') return out
+                if (torrentFileText[id].toChar() == 'e') return out
                 out.add(read())
                 ++id
             }
@@ -63,26 +61,44 @@ class Parser public constructor( str : String) {
 
             val out = LinkedHashMap<Any?, Any?>()
             while (true) {
-                if (torrentFileText[id] == 'e') return out
+                if (torrentFileText[id].toChar() == 'e') return out
                 val key = read()
                 ++id
+                if(key == "pieces")
+                    pieces_flag = true
                 val value = read()
+                if(key  == "pieces")
+                    pieces_flag = false
                 out[key] = value
                 ++id
             }
 
         }
 
-        //string 5:hihih
+        //string example :  5:hihih
         else if (type >= '0' && type <= '9') {
             var len = type.toInt() - 48
             val limit: Int = id + 11
             while (id <= limit) {
-                val c: Char = torrentFileText[id]
+                val c: Char = torrentFileText[id].toChar()
                 if (c == ':') {
-                    val out: String = torrentFileText.substring(id + 1, id + len + 1)
-                    id += len
-                    return out
+
+                    if (pieces_flag)//get out as raw bytes
+                    {
+
+                       // val out: String = torrentFileText.toByteArray().decodeToString(id+1,id+len + 1,false)//.substring(id + 1, id  + 11)
+
+                        val out = torrentFileText.copyOfRange(id+1,id+len)
+                       id +=  len-3
+
+                        return out
+                    }
+                    else { //get out as utf8(normal) string
+
+                        val out: String = torrentFileText.copyOfRange(id + 1, id + len + 1).toString(Charsets.UTF_8)
+                        id += len
+                        return out
+                    }
                 }
                 len = len * 10 + (c.toInt() - 48)
                 ++id

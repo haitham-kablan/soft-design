@@ -1,17 +1,15 @@
 package il.ac.technion.cs.softwaredesign
 
-import Parser
-
 
 fun main() {
     println("hello, world")
 
+    var haith : String = "haitham"
+    var haithBytes = haith.toByteArray()
 
-   // val debian = getResource("/debian-10.3.0-amd64-netinst.iso.torrent").readText()
+    var haithString = haithBytes.toString()
 
-  //  val parser = Parser()
+    println("hello, world")
 
-//    val torrentMap = parser.read()
-
-    println(torrentMap)
 }
+
