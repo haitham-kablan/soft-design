@@ -1,5 +1,5 @@
-
 import java.nio.charset.Charset
+import java.security.MessageDigest
 import java.util.*
 
 //TODO add this
@@ -9,14 +9,41 @@ class Parser public constructor(str : ByteArray) {
 
     private var pieces_flag: Boolean = false
     private val torrentFileText = str
+    private var info_start = 0
+    private var info_end = 0
     private var id : Int = 0
-    public val metaInfoMap  = read() as LinkedHashMap< String , Any?>;//has keys: info
+
+    public val metaInfoMap  = read() as LinkedHashMap< String , Any?>
+
+
+//    public val info_str = (torrentFileText.copyOfRange(info_start,info_end))
+//        .toString(Charsets.UTF_8)
+//
+//    public val infohash = SHA1hash(info_str)
+//
+//    private fun SHA1hash(input : String) : String{
+//
+//        val HEX_CHARS = "0123456789ABCDEF"
+//        val bytes = MessageDigest
+//            .getInstance("SHA-1")
+//            .digest(input.toByteArray())
+//        val result = StringBuilder(bytes.size * 2)
+//
+//        bytes.forEach {
+//            val i = it.toInt()
+//            result.append(HEX_CHARS[i shr 4 and 0x0f])
+//            result.append(HEX_CHARS[i and 0x0f])
+//        }
+//
+//        return result.toString()
+//    }
 
 
     // TODO add this @throws IllegalArgumentException If [torrentFileText] is not a valid metainfo file.
     private fun read(): Any? {
-        if (id >= torrentFileText.size)
+        if (id >= torrentFileText.size) {
             return null
+        }
 
 
 
@@ -66,9 +93,13 @@ class Parser public constructor(str : ByteArray) {
                 ++id
                 if(key == "pieces")
                     pieces_flag = true
+                if(key == "info")
+                    info_start = id
                 val value = read()
                 if(key  == "pieces")
                     pieces_flag = false
+                if(key == "info")
+                    info_end = id + 1
                 out[key] = value
                 ++id
             }
@@ -86,11 +117,10 @@ class Parser public constructor(str : ByteArray) {
                     if (pieces_flag)//get out as raw bytes
                     {
 
-                       // val out: String = torrentFileText.toByteArray().decodeToString(id+1,id+len + 1,false)//.substring(id + 1, id  + 11)
+                        // val out: String = torrentFileText.toByteArray().decodeToString(id+1,id+len + 1,false)//.substring(id + 1, id  + 11)
 
-                        val out = torrentFileText.copyOfRange(id+1,id+len)
-                       id +=  len-3
-
+                        val out = torrentFileText.copyOfRange(id+1,id+len+1)
+                        id +=  len
                         return out
                     }
                     else { //get out as utf8(normal) string

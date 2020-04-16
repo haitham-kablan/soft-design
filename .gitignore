@@ -36,3 +36,15 @@ base/coursetorrent-app/build/kotlin/coursetorrentappjar-classes.txt
 *.s
 
 *.values
+
+base/coursetorrent-test/build/reports/tests/test/classes/
+
+*.css
+
+*.html
+
+*.js
+
+*.idx
+
+*.xml
