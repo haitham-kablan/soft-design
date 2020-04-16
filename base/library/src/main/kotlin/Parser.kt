@@ -21,40 +21,31 @@ class Parser public constructor(str : ByteArray) {
     public val metaInfoMap  = read() as LinkedHashMap< String , Any?>
 
 
-    public var info_str : String
-    init {
-        val str1 = (torrentFileText.copyOfRange(info_start,pieces_start - 1))
-                .toString(kotlin.text.Charsets.UTF_8)
 
-        val str2 = (torrentFileText.copyOfRange(pieces_start,pieces_end ))
-                .toString(Charsets.)
+
+    public val infohash :String
+
+    init {
+        val str1 = (torrentFileText.copyOfRange(info_start,pieces_start))
+            .toString(kotlin.text.Charsets.UTF_8)
+
+        val str2 = (torrentFileText.copyOfRange(pieces_start,pieces_end+1 ))
+
 
         val str3 = (torrentFileText.copyOfRange(pieces_end + 1, info_end))
-                .toString(kotlin.text.Charsets.UTF_8)
+            .toString(kotlin.text.Charsets.UTF_8)
 
-
-        info_str = str1 + str2 + str3
-
-        println(str1)
-        println(str2)
-        println(str3)
+        infohash = SHA1hash(str1,str2,str3)
     }
 
-    public val infohash = SHA1hash(info_str)
 
 
-
-
-    private fun SHA1hash(input : String) : String{
-
-        println(input)
-        println()
-
+    private fun SHA1hash(str1 : String, str2 :ByteArray , str3 :String) : String{
 
         val HEX_CHARS = "0123456789abcdef"
         val bytes = MessageDigest
             .getInstance("SHA-1")
-            .digest("input".toByteArray())
+            .digest(str1.toByteArray() + str2 + str3.toByteArray())
         val result = StringBuilder(bytes.size * 2)
 
         bytes.forEach {
@@ -64,7 +55,6 @@ class Parser public constructor(str : ByteArray) {
         }
 
         return result.toString()
-
     }
 
 
