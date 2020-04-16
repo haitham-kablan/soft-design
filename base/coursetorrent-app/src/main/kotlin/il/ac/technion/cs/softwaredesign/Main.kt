@@ -1,11 +1,15 @@
 package il.ac.technion.cs.softwaredesign
-import il.ac.technion.cs.softwaredesign.storage.read
-import il.ac.technion.cs.softwaredesign.storage.write
-
 
 
 fun main() {
     println("hello, world")
 
+    var haith : String = "haitham"
+    var haithBytes = haith.toByteArray()
+
+    var haithString = haithBytes.toString()
+
+    println("hello, world")
 
 }
+
