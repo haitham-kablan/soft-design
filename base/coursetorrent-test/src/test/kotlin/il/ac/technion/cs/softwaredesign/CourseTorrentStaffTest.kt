@@ -7,9 +7,6 @@ import com.natpryce.hamkrest.hasElement
 import com.natpryce.hamkrest.hasSize
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertDoesNotThrow
-import Parser
-import java.nio.charset.Charset
-
 
 class CourseTorrentStaffTest {
     private val torrent = CourseTorrent()
@@ -17,24 +14,19 @@ class CourseTorrentStaffTest {
 
     @Test
     fun `after load, infohash calculated correctly`() {
-        println(debian)
-       val metainfomap = Parser(debian).metaInfoMap
+        val infohash = torrent.load(debian)
 
-
-
-      //  val infohash = torrent.load(debian)
-    //  println(metainfomap)
-
+        assertThat(infohash, equalTo("5a8062c076fa85e8056451c0d9aa04349ae27909"))
     }
 
     @Test
     fun `after load, announce is correct`() {
-       // val infohash = torrent.load(debian)
+        val infohash = torrent.load(debian)
 
-       // val announces = torrent.announces(infohash)
+        val announces = torrent.announces(infohash)
 
-       // assertThat(announces, allElements(hasSize(equalTo(1))))
-       // assertThat(announces, hasSize(equalTo(1)))
-       // assertThat(announces, allElements(hasElement("http://bttracker.debian.org:6969/announce")))
+        assertThat(announces, allElements(hasSize(equalTo(1))))
+        assertThat(announces, hasSize(equalTo(1)))
+        assertThat(announces, allElements(hasElement("http://bttracker.debian.org:6969/announce")))
     }
 }

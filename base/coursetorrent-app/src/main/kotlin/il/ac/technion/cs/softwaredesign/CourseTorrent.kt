@@ -3,6 +3,8 @@ package il.ac.technion.cs.softwaredesign
 
 import my_lib
 import Parser
+import byteArrayToListOfListOfString
+import listOfListOfStringToByteArray
 import java.util.ArrayList
 import java.util.LinkedHashMap
 
@@ -30,27 +32,32 @@ class CourseTorrent {
      */
     fun load(torrent: ByteArray): String {
 
+        val parser = Parser(torrent) // @throws IllegalStateException If the infohash of [torrent] is already loaded.
 
-        val metainfomap = Parser(torrent).metaInfoMap
+        val metainfomap = parser.metaInfoMap
+        val infohash = parser.infohash
+        val infohashBytes = infohash.toByteArray()
 
-        val infohash = metainfomap.get("info")
-        //TODO: convert infohash from info dictinary to infohash
+        val readVal = my_lib.lib_read(infohashBytes)
 
-        val readVal = my_lib.lib_read(infohash as ByteArray)
         if (readVal != null && !readVal.equals(0))//already exists and not deleted
             throw IllegalStateException()
 
-        val announce = metainfomap.get("announce-list")
+
+
+        val announce = metainfomap.get("announce-list") as List<List<String>>?
 
         if(announce == null){
             val list = ArrayList<String>()
             list.add( metainfomap.get("announce") as String)
             val list2 = ArrayList<ArrayList<String>>()
             list2.add(list)
-            my_lib.lib_write(infohash, list2 as ByteArray)
+
+
+            my_lib.lib_write(infohashBytes, listOfListOfStringToByteArray(list2))
         }
         else
-            my_lib.lib_write(infohash, announce as ByteArray)
+            my_lib.lib_write(infohashBytes, listOfListOfStringToByteArray(announce))
 
         return infohash as String
 
@@ -65,11 +72,11 @@ class CourseTorrent {
      */
     fun unload(infohash: String): Unit {
 
-        val readVal = my_lib.lib_read(infohash as ByteArray);
+        val readVal = my_lib.lib_read(infohash.toByteArray());
         if(readVal == null || readVal.equals(0))
             throw IllegalArgumentException()
 
-        my_lib.lib_delete(infohash as ByteArray)
+        my_lib.lib_delete(infohash.toByteArray())
     }
 
 
@@ -93,6 +100,6 @@ class CourseTorrent {
         val readVal = my_lib.lib_read(infohash as ByteArray);
         if(readVal == null || readVal.equals(0))
             throw IllegalArgumentException()
-        return readVal as List<List<String>>
+        return byteArrayToListOfListOfString( readVal )
     }
 }

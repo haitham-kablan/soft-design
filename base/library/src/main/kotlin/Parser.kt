@@ -2,9 +2,9 @@ import java.nio.charset.Charset
 import java.security.MessageDigest
 import java.util.*
 
-//TODO add this
-//      * @throws IllegalArgumentException If [str] is not a valid metainfo file.
-
+/**
+ * @throws IllegalArgumentException If [str] is not a valid metainfo file.
+ */
 class Parser public constructor(str : ByteArray) {
 
     private var pieces_flag: Boolean = false
@@ -16,33 +16,39 @@ class Parser public constructor(str : ByteArray) {
     public val metaInfoMap  = read() as LinkedHashMap< String , Any?>
 
 
-//    public val info_str = (torrentFileText.copyOfRange(info_start,info_end))
-//        .toString(Charsets.UTF_8)
-//
-//    public val infohash = SHA1hash(info_str)
-//
-//    private fun SHA1hash(input : String) : String{
-//
-//        val HEX_CHARS = "0123456789ABCDEF"
-//        val bytes = MessageDigest
-//            .getInstance("SHA-1")
-//            .digest(input.toByteArray())
-//        val result = StringBuilder(bytes.size * 2)
-//
-//        bytes.forEach {
-//            val i = it.toInt()
-//            result.append(HEX_CHARS[i shr 4 and 0x0f])
-//            result.append(HEX_CHARS[i and 0x0f])
-//        }
-//
-//        return result.toString()
-//    }
+    public val info_str = (torrentFileText.copyOfRange(info_start,info_end))
+        .toString(Charsets.UTF_8)
+
+    public val infohash = SHA1hash(info_str)
 
 
-    // TODO add this @throws IllegalArgumentException If [torrentFileText] is not a valid metainfo file.
+
+
+    private fun SHA1hash(input : String) : String{
+
+        val HEX_CHARS = "0123456789abcdef"
+        val bytes = MessageDigest
+            .getInstance("SHA-1")
+            .digest(input.toByteArray())
+        val result = StringBuilder(bytes.size * 2)
+
+        bytes.forEach {
+            val i = it.toInt()
+            result.append(HEX_CHARS[i shr 4 and 0x0f])
+            result.append(HEX_CHARS[i and 0x0f])
+        }
+
+        return result.toString()
+
+    }
+
+
+    /**
+     * @throws IllegalArgumentException If [torrentFileText] is not a valid metainfo file.
+     */
     private fun read(): Any? {
         if (id >= torrentFileText.size) {
-            return null
+            throw IllegalArgumentException()
         }
 
 
@@ -51,8 +57,9 @@ class Parser public constructor(str : ByteArray) {
         ++id
 
         //integer example : i5e
+        //returns Int
         if (type == 'i') {
-            var out: Long = 0
+            var out: Int = 0
             val start: Int = id
             val limit: Int = id + 22
             var neg = false
@@ -72,6 +79,7 @@ class Parser public constructor(str : ByteArray) {
 
 
         //list:  l element element element e
+        //returns ArrayList
         else if (type == 'l') {
             val out = ArrayList<Any?>()
             while (true) {
@@ -84,6 +92,7 @@ class Parser public constructor(str : ByteArray) {
 
 
         // dictinary d key value key value e
+        //Returns LinkedHashMap
         else if (type == 'd') {
 
             val out = LinkedHashMap<Any?, Any?>()
@@ -91,15 +100,19 @@ class Parser public constructor(str : ByteArray) {
                 if (torrentFileText[id].toChar() == 'e') return out
                 val key = read()
                 ++id
+
                 if(key == "pieces")
                     pieces_flag = true
                 if(key == "info")
                     info_start = id
+
                 val value = read()
+
                 if(key  == "pieces")
                     pieces_flag = false
                 if(key == "info")
                     info_end = id + 1
+
                 out[key] = value
                 ++id
             }
@@ -107,6 +120,7 @@ class Parser public constructor(str : ByteArray) {
         }
 
         //string example :  5:hihih
+        //returns String or ByteArray
         else if (type >= '0' && type <= '9') {
             var len = type.toInt() - 48
             val limit: Int = id + 11
@@ -121,6 +135,7 @@ class Parser public constructor(str : ByteArray) {
 
                         val out = torrentFileText.copyOfRange(id+1,id+len+1)
                         id +=  len
+
                         return out
                     }
                     else { //get out as utf8(normal) string
@@ -134,7 +149,7 @@ class Parser public constructor(str : ByteArray) {
                 ++id
             }
         }
-        return null
+        throw IllegalArgumentException()
     }
 
 }
