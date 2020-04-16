@@ -7,17 +7,38 @@ import java.util.*
  */
 class Parser public constructor(str : ByteArray) {
 
-    private var pieces_flag: Boolean = false
+
     private val torrentFileText = str
+
+    private var pieces_flag: Boolean = false
+
     private var info_start = 0
     private var info_end = 0
+    private var pieces_start = 0
+    private var pieces_end = 0
     private var id : Int = 0
 
     public val metaInfoMap  = read() as LinkedHashMap< String , Any?>
 
 
-    public val info_str = (torrentFileText.copyOfRange(info_start,info_end))
-        .toString(Charsets.UTF_8)
+    public var info_str : String
+    init {
+        val str1 = (torrentFileText.copyOfRange(info_start,pieces_start - 1))
+                .toString(kotlin.text.Charsets.UTF_8)
+
+        val str2 = (torrentFileText.copyOfRange(pieces_start,pieces_end ))
+                .toString(Charsets.)
+
+        val str3 = (torrentFileText.copyOfRange(pieces_end + 1, info_end))
+                .toString(kotlin.text.Charsets.UTF_8)
+
+
+        info_str = str1 + str2 + str3
+
+        println(str1)
+        println(str2)
+        println(str3)
+    }
 
     public val infohash = SHA1hash(info_str)
 
@@ -26,10 +47,14 @@ class Parser public constructor(str : ByteArray) {
 
     private fun SHA1hash(input : String) : String{
 
+        println(input)
+        println()
+
+
         val HEX_CHARS = "0123456789abcdef"
         val bytes = MessageDigest
             .getInstance("SHA-1")
-            .digest(input.toByteArray())
+            .digest("input".toByteArray())
         val result = StringBuilder(bytes.size * 2)
 
         bytes.forEach {
@@ -102,14 +127,14 @@ class Parser public constructor(str : ByteArray) {
                 ++id
 
                 if(key == "pieces")
-                    pieces_flag = true
+                    pieces_start = id
                 if(key == "info")
                     info_start = id
 
                 val value = read()
 
                 if(key  == "pieces")
-                    pieces_flag = false
+                    pieces_end = id
                 if(key == "info")
                     info_end = id + 1
 
@@ -121,14 +146,14 @@ class Parser public constructor(str : ByteArray) {
 
         //string example :  5:hihih
         //returns String or ByteArray
-        else if (type >= '0' && type <= '9') {
+        else if (type in '0'..'9') {
             var len = type.toInt() - 48
             val limit: Int = id + 11
             while (id <= limit) {
                 val c: Char = torrentFileText[id].toChar()
                 if (c == ':') {
 
-                    if (pieces_flag)//get out as raw bytes
+                    if (id in pieces_start..pieces_end)//get out as raw bytes
                     {
 
                         // val out: String = torrentFileText.toByteArray().decodeToString(id+1,id+len + 1,false)//.substring(id + 1, id  + 11)
